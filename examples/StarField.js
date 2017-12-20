@@ -15,16 +15,20 @@
  */
 
 requirejs([
+        './DoNothingWindowController',
         './WorldWindShim',
         './LayerManager'
     ],
-    function (WorldWind,
+    function (DoNothingWindowController,
+              WorldWind,
               LayerManager) {
         'use strict';
 
         WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
 
         var wwd = new WorldWind.WorldWindow('canvasOne');
+        wwd.worldWindowController=new DoNothingWindowController(wwd);
+        wwd.removePreventDefaultListeners();
 
         var BMNGLayer = new WorldWind.BMNGLayer();
         var starFieldLayer = new WorldWind.StarFieldLayer();
@@ -32,11 +36,11 @@ requirejs([
         wwd.addLayer(BMNGLayer);
 
         //IMPORTANT: add the starFieldLayer before the atmosphereLayer
-        wwd.addLayer(starFieldLayer);
+        //wwd.addLayer(starFieldLayer);
         wwd.addLayer(atmosphereLayer);
 
         var date = new Date();
-        starFieldLayer.time = date;
+        // starFieldLayer.time = date;
         atmosphereLayer.time = date;
 
         var layerManager = new LayerManager(wwd);
@@ -62,7 +66,7 @@ requirejs([
         }
 
         function runSunSimulation(wwd, stage) {
-            if (stage === WorldWind.AFTER_REDRAW && doRunSimulation) {
+            if (stage === WorldWind.AFTER_REDRAW) { // && doRunSimulation) {
                 timeStamp += (factor * 60 * 1000);
                 var date = new Date(timeStamp);
                 starFieldLayer.time = date;

@@ -215,14 +215,14 @@ define([
 
             // Prevent the browser's default actions in response to mouse and touch events, which interfere with
             // navigation. Register these event listeners  before any others to ensure that they're called last.
-            function preventDefaultListener(event) {
+            this.preventDefaultListener = function (event) {
                 event.preventDefault();
-            }
+            };
 
-            this.addEventListener("mousedown", preventDefaultListener);
-            this.addEventListener("touchstart", preventDefaultListener);
-            this.addEventListener("contextmenu", preventDefaultListener);
-            this.addEventListener("wheel", preventDefaultListener);
+            this.addEventListener("mousedown", this.preventDefaultListener);
+            this.addEventListener("touchstart", this.preventDefaultListener);
+            this.addEventListener("contextmenu", this.preventDefaultListener);
+            this.addEventListener("wheel", this.preventDefaultListener);
 
             var thisWindow = this;
 
@@ -390,6 +390,13 @@ define([
                     this.canvas.addEventListener(type, entry.callback, false);
                 }
             }
+        };
+
+        WorldWindow.prototype.removePreventDefaultListeners = function () {
+            this.removeEventListener("mousedown", this.preventDefaultListener);
+            this.removeEventListener("touchstart", this.preventDefaultListener);
+            this.removeEventListener("contextmenu", this.preventDefaultListener);
+            this.removeEventListener("wheel", this.preventDefaultListener);
         };
 
         /**
